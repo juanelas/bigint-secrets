@@ -1,0 +1,35 @@
+{
+  "name": "bigint-secrets",
+  "version": "0.9.0",
+  "description": "Cryptographically secure random numbers and prime generation/testing using native JS (stage 3) implementation of BigInt",
+  "keywords": [
+    "prime",
+    "rng",
+    "primality test",
+    "BigInt"
+  ],
+  "license": "MIT",
+  "author": {
+    "name": "Juan Hernández Serrano",
+    "email": "jserrano@entel.upc.edu",
+    "url": "https://github.com/juanelas"
+  },
+  "repository": "github:juanelas/bigint-secrets",
+  "main": "./src/main.js",
+  "directories": {
+    "test": "./test",
+    "src": "./src"
+  },
+  "scripts": {
+    "test": "mocha --timeout 600000",
+    "docs:build": "jsdoc2md --template=README.hbs --files ./src/main.js > README.md"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "jsdoc-to-markdown": "^4.0.1",
+    "mocha": "^6.0.2"
+  },
+  "dependencies": {
+    "bigint-mod-arith": "^1.0.0"
+  }
+}
