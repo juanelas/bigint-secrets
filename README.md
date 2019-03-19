@@ -15,7 +15,7 @@ const secrets = require('bigingt-secrets');
 const prime = await secrets.prime(2048);
 
 // Testing if a prime is a probably prime (Miller-Ravin)
-if ( secrets.isProbablyPrime(prime) )
+if ( await secrets.isProbablyPrime(prime) )
     return true;
 
 // Get a cryptographically secure random number of between 1 and 2**256 bits.
