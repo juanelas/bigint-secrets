@@ -1,6 +1,6 @@
 # bigint-secrets 
 
-Secure random numbers and provably prime (Miller-Rabin primality test) generation/testing using native JS (stage 3) implementation of BigInt.
+Secure random numbers and probable prime (Miller-Rabin primality test) generation/testing using native JS (stage 3) implementation of BigInt.
 
 _The operations supported on BigInts are not constant time. BigInt is therefore **[unsuitable for use in cryptography](https://www.chosenplaintext.ca/articles/beginners-guide-constant-time-cryptography.html)**_
 
@@ -11,10 +11,10 @@ Many platforms provide native support for cryptography, such as [webcrypto](http
 ```javascript
 const secrets = require('bigingt-secrets');
 
-// Generation of a probably prime of 2048 bits
+// Generation of a probable prime of 2048 bits
 const prime = await secrets.prime(2048);
 
-// Testing if a prime is a probably prime (Miller-Ravin)
+// Testing if a prime is a probable prime (Miller-Ravin)
 if ( await secrets.isProbablyPrime(prime) )
     return true;
 
