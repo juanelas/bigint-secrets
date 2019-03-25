@@ -25,5 +25,10 @@
             "error",
             "always"
         ]
+    },
+    "globals": {
+        "BigInt": "readonly",
+        "window": "readonly",
+        "Uint8Array": "readonly"
     }
 }

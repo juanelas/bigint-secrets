@@ -11,21 +11,21 @@ const modArith = require('bigint-mod-arith');
  * @returns {Promise} A promise that resolves to a Buffer/UInt8Array filled with cryptographically secure random bytes
  */
 const randBytes = async function (byteLength, forceLength = false) {
-	let buf;
-	if (typeof window === 'undefined') {  // node
-		const crypto = require('crypto');
-		buf = Buffer.alloc(byteLength);
-		crypto.randomFillSync(buf);
-	} else { // browser
-		buf = new Uint8Array(byteLength);
-		window.crypto.getRandomValues(buf);
-	}
+    let buf;
+    if (typeof window === 'undefined') {  // node
+        const crypto = require('crypto');
+        buf = Buffer.alloc(byteLength);
+        crypto.randomFillSync(buf);
+    } else { // browser
+        buf = new Uint8Array(byteLength);
+        window.crypto.getRandomValues(buf);
+    }
 
-	// If fixed length is required we put the first bit to 1 -> to get the necessary bitLength
-	if (forceLength)
-		buf[0] = buf[0] | 128;
+    // If fixed length is required we put the first bit to 1 -> to get the necessary bitLength
+    if (forceLength)
+        buf[0] = buf[0] | 128;
 
-	return buf;
+    return buf;
 };
 
 /**
@@ -36,24 +36,24 @@ const randBytes = async function (byteLength, forceLength = false) {
  * @returns {Promise} A promise that resolves to a cryptographically secure random bigint between [min,max]
  */
 const randBetween = async function (max, min = 1) {
-	let bitLen = bitLength(max);
-	let byteLength = bitLen >> 3;
-	let remaining = bitLen - (byteLength * 8);
-	let extraBits;
-	if (remaining > 0) {
-		byteLength++;
-		extraBits = 2 ** remaining - 1;
-	}
+    let bitLen = bitLength(max);
+    let byteLength = bitLen >> 3;
+    let remaining = bitLen - (byteLength * 8);
+    let extraBits;
+    if (remaining > 0) {
+        byteLength++;
+        extraBits = 2 ** remaining - 1;
+    }
 
-	let rnd;
-	do {
-		let buf = await randBytes(byteLength);
-		// remove extra bits
-		if (remaining > 0)
-			buf[0] = buf[0] & extraBits;
-		rnd = fromBuffer(buf);
-	} while (rnd > max || rnd < min)
-	return rnd;
+    let rnd;
+    do {
+        let buf = await randBytes(byteLength);
+        // remove extra bits
+        if (remaining > 0)
+            buf[0] = buf[0] & extraBits;
+        rnd = fromBuffer(buf);
+    } while (rnd > max || rnd < min);
+    return rnd;
 };
 
 /**
@@ -65,16 +65,16 @@ const randBetween = async function (max, min = 1) {
  * @return {Promise} A promise that resolve to a boolean that is either true (a probably prime number) or false (definitely composite)
  */
 const isProbablyPrime = async function (w, iterations = 41) {
-	/*
+    /*
 	PREFILTERING. Even values but 2 are not primes, so don't test. 
 	1 is not a prime and the M-R algorithm needs w>1.
 	*/
-	if (w === 2n)
-		return true;
-	else if ((w & 1n) === 0n || w === 1n)
-		return false;
+    if (w === BigInt(2))
+        return true;
+    else if ((w & BigInt(1)) === BigInt(0) || w === BigInt(1))
+        return false;
 
-	/*
+    /*
 	1. Let a be the largest integer such that 2**a divides w−1.
 	2. m = (w−1) / 2**a.
 	3. wlen = len (w).
@@ -93,31 +93,31 @@ const isProbablyPrime = async function (w, iterations = 41) {
 		Comment: Increment i for the do-loop in step 4.
 	5. Return PROBABLY PRIME.
 	*/
-	let a = 0n, d = w - 1n;
-	while (d % 2n === 0n) {
-		d /= 2n;
-		++a;
-	}
+    let a = BigInt(0), d = w - BigInt(1);
+    while (d % BigInt(2) === BigInt(0)) {
+        d /= BigInt(2);
+        ++a;
+    }
 
-	let m = (w - 1n) / (2n ** a);
+    let m = (w - BigInt(1)) / (BigInt(2) ** a);
 
-	loop: do {
-		let b = await randBetween(w - 1n, 2);
-		let z = modArith.modPow(b, m, w);
-		if (z === 1n || z === w - 1n)
-			continue;
+    loop: do {
+        let b = await randBetween(w - BigInt(1), 2);
+        let z = modArith.modPow(b, m, w);
+        if (z === BigInt(1) || z === w - BigInt(1))
+            continue;
 
-		for (let j = 1; j < a; j++) {
-			z = modArith.modPow(z, 2n, w);
-			if (z === w - 1n)
-				continue loop;
-			if (z === 1n)
-				break;
-		}
-		return false;
-	} while (--iterations);
+        for (let j = 1; j < a; j++) {
+            z = modArith.modPow(z, BigInt(2), w);
+            if (z === w - BigInt(1))
+                continue loop;
+            if (z === BigInt(1))
+                break;
+        }
+        return false;
+    } while (--iterations);
 
-	return true;
+    return true;
 };
 
 /**
@@ -129,34 +129,34 @@ const isProbablyPrime = async function (w, iterations = 41) {
  * @returns {Promise} A promise that resolves to a bigint probable prime of bitLength bits
  */
 const prime = async function (bitLength, iterations = 41) {
-	let rnd = 0n;
-	do {
-		rnd = fromBuffer(await randBytes(bitLength / 8, true));
-	} while (! await isProbablyPrime(rnd, iterations))
-	return rnd;
+    let rnd = BigInt(0);
+    do {
+        rnd = fromBuffer(await randBytes(bitLength / 8, true));
+    } while (! await isProbablyPrime(rnd, iterations));
+    return rnd;
 };
 
 
 function fromBuffer(buf) {
-	let ret = 0n;
-	for (let i of buf.values()) {
-		let bi = BigInt(i);
-		ret = (ret << 8n) + bi;
-	}
-	return ret;
+    let ret = BigInt(0);
+    for (let i of buf.values()) {
+        let bi = BigInt(i);
+        ret = (ret << BigInt(8)) + bi;
+    }
+    return ret;
 }
 
 function bitLength(a) {
-	let bits = 1;
-	do {
-		bits++;
-	} while ((a >>= 1n) > 1n)
-	return bits;
+    let bits = 1;
+    do {
+        bits++;
+    } while ((a >>= BigInt(1)) > BigInt(1));
+    return bits;
 }
 
 module.exports = {
-	isProbablyPrime: isProbablyPrime,
-	prime: prime,
-	randBetween: randBetween,
-	randBytes: randBytes
+    isProbablyPrime: isProbablyPrime,
+    prime: prime,
+    randBetween: randBetween,
+    randBytes: randBytes
 };
