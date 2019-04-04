@@ -1,6 +1,57 @@
 'use strict';
 
 const modArith = require('bigint-mod-arith');
+const isNode = typeof window === 'undefined';
+
+
+/**
+ * Asynchronous function to get random values on browser using WebWorkers
+ *
+ * @param {Uint8Array} buf The buffer where the number will be stored
+ * @param {boolean} cb Callback executed after the number is computed
+ *
+ */
+const getRandomValuesWorker = isNode ?
+    (function() {   // node
+        return function() {
+            throw Error('Function getRandomValues can only be called on browser. Try require("crypto").randomFill instead.');
+        };
+    })() :
+    (function() {  // browser
+        let currId = 0;
+        const workerCallbacks = {};
+        const worker = buildWorker(() => {
+            onmessage = function(ev) {
+                const buf = self.crypto.getRandomValues(ev.data.buf);
+                self.postMessage({ buf, id: ev.data.id });
+            };
+        });
+
+        return appendCallback;
+
+        //////////
+
+        function appendCallback(buf, cb) {
+            workerCallbacks[currId] = cb;
+            worker.postMessage({ buf, id: currId });
+            currId++;
+        }
+
+        function buildWorker(workerCode) {
+            const workerBlob = new window.Blob([ '(' + workerCode.toString() + ')()' ], { type: 'text/javascript' });
+            const worker = new Worker(window.URL.createObjectURL(workerBlob));
+            worker.onmessage = function(ev) {
+                const { id, buf } = ev.data;
+                if(workerCallbacks[id]) {
+                    workerCallbacks[id](false, buf);
+                    delete workerCallbacks[id];
+                }
+            };
+
+            return worker;
+        }
+    })();
+
 
 /**
  * Secure random bytes for both node and browsers
@@ -11,21 +62,25 @@ const modArith = require('bigint-mod-arith');
  * @returns {Promise} A promise that resolves to a Buffer/UInt8Array filled with cryptographically secure random bytes
  */
 const randBytes = async function (byteLength, forceLength = false) {
-    let buf;
-    if (typeof window === 'undefined') {  // node
-        const crypto = require('crypto');
-        buf = Buffer.alloc(byteLength);
-        crypto.randomFillSync(buf);
-    } else { // browser
-        buf = new Uint8Array(byteLength);
-        window.crypto.getRandomValues(buf);
-    }
+    return new Promise((resolve) => {
+        let buf;
+        const resolver = (err, buf) => {
+            // If fixed length is required we put the first bit to 1 -> to get the necessary bitLength
+            if (forceLength)
+                buf[0] = buf[0] | 128;
 
-    // If fixed length is required we put the first bit to 1 -> to get the necessary bitLength
-    if (forceLength)
-        buf[0] = buf[0] | 128;
+            resolve(buf);
+        };
 
-    return buf;
+        if (isNode) {  // node
+            const crypto = require('crypto');
+            buf = Buffer.alloc(byteLength);
+            crypto.randomFill(buf, resolver);
+        } else { // browser
+            buf = new Uint8Array(byteLength);
+            getRandomValuesWorker(buf, resolver);
+        }
+    });
 };
 
 /**
