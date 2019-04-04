@@ -63,7 +63,7 @@ Returns a cryptographically secure random integer between [min,max]
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
 | max | <code>bigint</code> |  | Returned value will be < max |
-| min | <code>bigint</code> | <code>1</code> | Returned value will be > max |
+| min | <code>bigint</code> | <code>1</code> | Returned value will be > min |
 
 <a name="isProbablyPrime"></a>
 
@@ -88,7 +88,7 @@ A probably-prime (Miller-Rabin), cryptographically-secure, random-number generat
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| bitLength | <code>number</code> |  | The required bit lenght for the generated prime |
+| bitLength | <code>number</code> |  | The required bit length for the generated prime |
 | iterations | <code>number</code> | <code>41</code> | The number of iterations for the Miller-Rabin Probabilistic Primality Test |
 
 

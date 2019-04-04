@@ -86,7 +86,7 @@ const randBytes = async function (byteLength, forceLength = false) {
 /**
  * Returns a cryptographically secure random integer between [min,max]
  * @param {bigint} max Returned value will be < max
- * @param {bigint} min Returned value will be > max
+ * @param {bigint} min Returned value will be > min
  * 
  * @returns {Promise} A promise that resolves to a cryptographically secure random bigint between [min,max]
  */
@@ -178,7 +178,7 @@ const isProbablyPrime = async function (w, iterations = 41) {
 /**
  * A probably-prime (Miller-Rabin), cryptographically-secure, random-number generator
  *  
- * @param {number} bitLength The required bit lenght for the generated prime
+ * @param {number} bitLength The required bit length for the generated prime
  * @param {number} iterations The number of iterations for the Miller-Rabin Probabilistic Primality Test
  * 
  * @returns {Promise} A promise that resolves to a bigint probable prime of bitLength bits
