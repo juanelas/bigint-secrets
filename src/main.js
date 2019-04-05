@@ -1,8 +1,6 @@
 'use strict';
 
 const modArith = require('bigint-mod-arith');
-const isNode = typeof window === 'undefined';
-
 
 /**
  * Asynchronous function to get random values on browser using WebWorkers
@@ -11,17 +9,17 @@ const isNode = typeof window === 'undefined';
  * @param {boolean} cb Callback executed after the number is computed
  *
  */
-const getRandomValuesWorker = isNode ?
-    (function() {   // node
-        return function() {
+const getRandomValuesWorker = !process.browser ?
+    (function () {   // node
+        return function () {
             throw Error('Function getRandomValues can only be called on browser. Try require("crypto").randomFill instead.');
         };
     })() :
-    (function() {  // browser
+    (function () {  // browser
         let currId = 0;
         const workerCallbacks = {};
         const worker = buildWorker(() => {
-            onmessage = function(ev) {
+            onmessage = function (ev) {
                 const buf = self.crypto.getRandomValues(ev.data.buf);
                 self.postMessage({ buf, id: ev.data.id });
             };
@@ -38,11 +36,11 @@ const getRandomValuesWorker = isNode ?
         }
 
         function buildWorker(workerCode) {
-            const workerBlob = new window.Blob([ '(' + workerCode.toString() + ')()' ], { type: 'text/javascript' });
+            const workerBlob = new window.Blob(['(' + workerCode.toString() + ')()'], { type: 'text/javascript' });
             const worker = new Worker(window.URL.createObjectURL(workerBlob));
-            worker.onmessage = function(ev) {
+            worker.onmessage = function (ev) {
                 const { id, buf } = ev.data;
-                if(workerCallbacks[id]) {
+                if (workerCallbacks[id]) {
                     workerCallbacks[id](false, buf);
                     delete workerCallbacks[id];
                 }
@@ -72,7 +70,7 @@ const randBytes = async function (byteLength, forceLength = false) {
             resolve(buf);
         };
 
-        if (isNode) {  // node
+        if (!process.browser) {  // node
             const crypto = require('crypto');
             buf = Buffer.alloc(byteLength);
             crypto.randomFill(buf, resolver);

@@ -1,7 +1,7 @@
 'use strict';
 
 const expect = require('chai').expect;
-const primes = require('../src/main');
+const primes = require('../build/bigint-secrets.node');
 
 const bitLengths = [
     256,
@@ -23,7 +23,7 @@ describe('Testing generation of prime numbers', function () {
                 let bits = 1;
                 do {
                     bits++;
-                } while ((prime >>= 1n) > 1n)
+                } while ((prime >>= BigInt(1)) > BigInt(1));
                 expect(bits).to.equal(bitLength);
             });
         });

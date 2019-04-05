@@ -1,12 +1,14 @@
 # bigint-secrets 
 
-Secure random numbers and probable prime (Miller-Rabin primality test) generation/testing using native JS (stage 3) implementation of BigInt.
+Secure random numbers and probable prime (Miller-Rabin primality test) generation/testing using native JS (stage 3) implementation of BigInt. It can be used with Node.js (starting in version 10.4.0) and [Web Browsers supporting BigInt](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/BigInt#Browser_compatibility).
 
-_The operations supported on BigInts are not constant time. BigInt is therefore **[unsuitable for use in cryptography](https://www.chosenplaintext.ca/articles/beginners-guide-constant-time-cryptography.html)**_
+_The operations supported on BigInts are not constant time. BigInt can be therefore **[unsuitable for use in cryptography](https://www.chosenplaintext.ca/articles/beginners-guide-constant-time-cryptography.html)**_
 
 Many platforms provide native support for cryptography, such as [webcrypto](https://w3c.github.io/webcrypto/Overview.html) or [node crypto](https://nodejs.org/dist/latest/docs/api/crypto.html).
 
 ## Usage
+
+### Node js
 
 ```javascript
 const secrets = require('bigingt-secrets');
@@ -21,6 +23,22 @@ if ( await secrets.isProbablyPrime(prime) )
 // Get a cryptographically secure random number of between 1 and 2**256 bits.
 const rnd = secrets.randBetween(2**256);
 ```
+
+### Browser
+bigint-secrets can be imported as a ES6 module if it was installed with npm. ES6 module bundle is placed in ./build/bigint-secrets.browser.min.mod.js
+
+You can also [download the bundle from GitHub](https://raw.githubusercontent.com/juanelas/bigint-secrets/master/build/bigint-secrets.browser.min.mod.js) or just hotlink to it:
+```html
+<script type="module" src="https://raw.githubusercontent.com/juanelas/bigint-secrets/master/build/bigint-secrets.browser.min.mod.js"></script>
+```
+
+## Constants
+
+<dl>
+<dt><a href="#getRandomValuesWorker">getRandomValuesWorker</a></dt>
+<dd><p>Asynchronous function to get random values on browser using WebWorkers</p>
+</dd>
+</dl>
 
 ## Functions
 
@@ -38,6 +56,18 @@ const rnd = secrets.randBetween(2**256);
 <dd><p>A probably-prime (Miller-Rabin), cryptographically-secure, random-number generator</p>
 </dd>
 </dl>
+
+<a name="getRandomValuesWorker"></a>
+
+## getRandomValuesWorker
+Asynchronous function to get random values on browser using WebWorkers
+
+**Kind**: global constant  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| buf | <code>Uint8Array</code> | The buffer where the number will be stored |
+| cb | <code>boolean</code> | Callback executed after the number is computed |
 
 <a name="randBytes"></a>
 
