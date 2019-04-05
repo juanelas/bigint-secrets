@@ -19,6 +19,7 @@
   "browser": "./build/bigint-secrets-latest.browser.mod.js",
   "directories": {
     "build": "./build",
+    "dist": "./dist",
     "src": "./src",
     "test": "./test"
   },
