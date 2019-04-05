@@ -1,7 +1,7 @@
 'use strict';
 
 const expect = require('chai').expect;
-const primes = require('../build/bigint-secrets.node');
+const primes = require('../dist/bigint-secrets-latest.node');
 
 const bitLengths = [
     256,
