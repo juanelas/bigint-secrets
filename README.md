@@ -25,11 +25,11 @@ const rnd = secrets.randBetween(2**256);
 ```
 
 ### Browser
-bigint-secrets can be imported as a ES6 module if it was installed with npm. ES6 module bundle is placed in ./build/bigint-secrets.browser.min.mod.js
+bigint-secrets can be imported as a ES6 module if it was installed with npm. ES6 module bundles (std and min version) can be found in the build directory
 
-You can also [download the bundle from GitHub](https://raw.githubusercontent.com/juanelas/bigint-secrets/master/build/bigint-secrets.browser.min.mod.js) or just hotlink to it:
+You can also [download the bundle from GitHub](https://raw.githubusercontent.com/juanelas/bigint-secrets/rollup/build/bigint-secrets-latest.browser.mod.min.js) or just hotlink to it:
 ```html
-<script type="module" src="https://raw.githubusercontent.com/juanelas/bigint-secrets/master/build/bigint-secrets.browser.min.mod.js"></script>
+<script type="module" src="https://raw.githubusercontent.com/juanelas/bigint-secrets/rollup/build/bigint-secrets-latest.browser.mod.min.js"></script>
 ```
 
 ## Constants

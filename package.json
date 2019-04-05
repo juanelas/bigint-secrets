@@ -15,8 +15,8 @@
     "url": "https://github.com/juanelas"
   },
   "repository": "github:juanelas/bigint-secrets",
-  "main": "./build/bigint-secrets.node.js",
-  "browser": "./build/bigint-secrets.browser.min.mod.js",
+  "main": "./build/bigint-secrets-latest.node.js",
+  "browser": "./build/bigint-secrets-latest.browser.mod.js",
   "directories": {
     "build": "./build",
     "src": "./src",
@@ -25,8 +25,8 @@
   "scripts": {
     "test": "mocha --timeout 600000",
     "docs:build": "jsdoc2md --template=README.hbs --files ./src/main.js > README.md",
-    "build": "rollup -c rollup.config.node.js && rollup -c rollup.config.browser.js",
-    "prepublishOnly": "npm run build"
+    "build": "node build/build.rollup.js",
+    "prepublishOnly": "npm run build && npm run docs:build"
   },
   "devDependencies": {
     "chai": "^4.2.0",
