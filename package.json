@@ -1,6 +1,6 @@
 {
   "name": "bigint-secrets",
-  "version": "0.10.0",
+  "version": "0.11.0",
   "description": "Cryptographically secure random numbers and prime generation/testing using native JS (stage 3) implementation of BigInt",
   "keywords": [
     "prime",
