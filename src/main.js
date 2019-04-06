@@ -3,56 +3,7 @@
 const modArith = require('bigint-mod-arith');
 
 /**
- * Asynchronous function to get random values on browser using WebWorkers
- *
- * @param {Uint8Array} buf The buffer where the number will be stored
- * @param {boolean} cb Callback executed after the number is computed
- *
- */
-const getRandomValuesWorker = !process.browser ?
-    (function () {   // node
-        return function () {
-            throw Error('Function getRandomValues can only be called on browser. Try require("crypto").randomFill instead.');
-        };
-    })() :
-    (function () {  // browser
-        let currId = 0;
-        const workerCallbacks = {};
-        const worker = buildWorker(() => {
-            onmessage = function (ev) {
-                const buf = self.crypto.getRandomValues(ev.data.buf);
-                self.postMessage({ buf, id: ev.data.id });
-            };
-        });
-
-        return appendCallback;
-
-        //////////
-
-        function appendCallback(buf, cb) {
-            workerCallbacks[currId] = cb;
-            worker.postMessage({ buf, id: currId });
-            currId++;
-        }
-
-        function buildWorker(workerCode) {
-            const workerBlob = new window.Blob(['(' + workerCode.toString() + ')()'], { type: 'text/javascript' });
-            const worker = new Worker(window.URL.createObjectURL(workerBlob));
-            worker.onmessage = function (ev) {
-                const { id, buf } = ev.data;
-                if (workerCallbacks[id]) {
-                    workerCallbacks[id](false, buf);
-                    delete workerCallbacks[id];
-                }
-            };
-
-            return worker;
-        }
-    })();
-
-
-/**
- * Secure random bytes for both node and browsers
+ * Secure random bytes for both node and browsers. Browser implementation uses WebWorkers in order to not lock the main process
  * 
  * @param {number} byteLength The desired number of random bytes
  * @param {boolean} forceLength If we want to force the output to have a bit length of 8*byteLength. It basically forces the msb to be 1
@@ -188,6 +139,49 @@ const prime = async function (bitLength, iterations = 41) {
     } while (! await isProbablyPrime(rnd, iterations));
     return rnd;
 };
+
+
+
+const getRandomValuesWorker = !process.browser ?
+    (function () {   // node
+        return function () {
+            throw Error('Function getRandomValues can only be called on browser. Try require("crypto").randomFill instead.');
+        };
+    })() :
+    (function () {  // browser
+        let currId = 0;
+        const workerCallbacks = {};
+        const worker = buildWorker(() => {
+            onmessage = function (ev) {
+                const buf = self.crypto.getRandomValues(ev.data.buf);
+                self.postMessage({ buf, id: ev.data.id });
+            };
+        });
+
+        return appendCallback;
+
+        //////////
+
+        function appendCallback(buf, cb) {
+            workerCallbacks[currId] = cb;
+            worker.postMessage({ buf, id: currId });
+            currId++;
+        }
+
+        function buildWorker(workerCode) {
+            const workerBlob = new window.Blob(['(' + workerCode.toString() + ')()'], { type: 'text/javascript' });
+            const worker = new Worker(window.URL.createObjectURL(workerBlob));
+            worker.onmessage = function (ev) {
+                const { id, buf } = ev.data;
+                if (workerCallbacks[id]) {
+                    workerCallbacks[id](false, buf);
+                    delete workerCallbacks[id];
+                }
+            };
+
+            return worker;
+        }
+    })();
 
 
 function fromBuffer(buf) {

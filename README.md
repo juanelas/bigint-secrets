@@ -41,19 +41,11 @@ const rnd = secrets.randBetween(2**256);
 
 # bigint-secrets JS Doc
 
-## Constants
-
-<dl>
-<dt><a href="#getRandomValuesWorker">getRandomValuesWorker</a></dt>
-<dd><p>Asynchronous function to get random values on browser using WebWorkers</p>
-</dd>
-</dl>
-
 ## Functions
 
 <dl>
 <dt><a href="#randBytes">randBytes(byteLength, forceLength)</a> ⇒ <code>Promise</code></dt>
-<dd><p>Secure random bytes for both node and browsers</p>
+<dd><p>Secure random bytes for both node and browsers. Browser implementation uses WebWorkers in order to not lock the main process</p>
 </dd>
 <dt><a href="#randBetween">randBetween(max, min)</a> ⇒ <code>Promise</code></dt>
 <dd><p>Returns a cryptographically secure random integer between [min,max]</p>
@@ -66,22 +58,10 @@ const rnd = secrets.randBetween(2**256);
 </dd>
 </dl>
 
-<a name="getRandomValuesWorker"></a>
-
-## getRandomValuesWorker
-Asynchronous function to get random values on browser using WebWorkers
-
-**Kind**: global constant  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| buf | <code>Uint8Array</code> | The buffer where the number will be stored |
-| cb | <code>boolean</code> | Callback executed after the number is computed |
-
 <a name="randBytes"></a>
 
 ## randBytes(byteLength, forceLength) ⇒ <code>Promise</code>
-Secure random bytes for both node and browsers
+Secure random bytes for both node and browsers. Browser implementation uses WebWorkers in order to not lock the main process
 
 **Kind**: global function  
 **Returns**: <code>Promise</code> - A promise that resolves to a Buffer/UInt8Array filled with cryptographically secure random bytes  
