@@ -6,9 +6,24 @@ _The operations supported on BigInts are not constant time. BigInt can be theref
 
 Many platforms provide native support for cryptography, such as [webcrypto](https://w3c.github.io/webcrypto/Overview.html) or [node crypto](https://nodejs.org/dist/latest/docs/api/crypto.html).
 
-## Usage
+## Installation
+bigint-secrets is distributed as both an ES6 and a CJS module.
 
-### Node js
+The ES6 module is built for any [web browser supporting BigInt](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/BigInt#Browser_compatibility). The module only uses native javascript implementations and no polyfills had been applied.
+
+The CJS module is built as a standard node module.
+
+bigint-secrets can be imported to your project with `npm`:
+```bash
+npm install bigint-secrets
+```
+
+For web brosers, you can also [download the bundle from GitHub](https://raw.githubusercontent.com/juanelas/bigint-secrets/rollup/dist/bigint-secrets-latest.browser.mod.min.js) or just hotlink to it:
+```html
+<script type="module" src="https://raw.githubusercontent.com/juanelas/bigint-secrets/rollup/dist/bigint-secrets-latest.browser.mod.min.js"></script>
+```
+
+## Usage example
 
 ```javascript
 const secrets = require('bigingt-secrets');
@@ -24,13 +39,7 @@ if ( await secrets.isProbablyPrime(prime) )
 const rnd = secrets.randBetween(2**256);
 ```
 
-### Browser
-bigint-secrets can be imported as an ES6 module from any [web browser supporting BigInt](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/BigInt#Browser_compatibility).
-
-You can also [download the bundle from GitHub](https://raw.githubusercontent.com/juanelas/bigint-secrets/rollup/dist/bigint-secrets-latest.browser.mod.min.js) or just hotlink to it:
-```html
-<script type="module" src="https://raw.githubusercontent.com/juanelas/bigint-secrets/rollup/dist/bigint-secrets-latest.browser.mod.min.js"></script>
-```
+# bigint-secrets JS Doc
 
 {{>main}}
 
