@@ -62,11 +62,6 @@ const buildOptions = [
 
 for (const options of buildOptions) {
     build(options);
-
-    fs.copyFileSync(
-        options.output.file,
-        options.output.file.replace(`${pkgJson.name}-${pkgJson.version}.`, `${pkgJson.name}-latest.`)
-    );
 }
 
 
@@ -82,4 +77,10 @@ async function build(options) {
 
     // or write the bundle to disk
     await bundle.write(options.output);
+
+    // copy the latest build as pkg_name-latest
+    fs.copyFileSync(
+        options.output.file,
+        options.output.file.replace(`${pkgJson.name}-${pkgJson.version}.`, `${pkgJson.name}-latest.`)
+    );
 }
