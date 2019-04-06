@@ -158,7 +158,7 @@ const modPow = function (a, b, n) {
     return result;
 };
 
-var main = {
+var bigintModArithLatest_node = {
     abs: abs,
     gcd: gcd,
     lcm: lcm,
@@ -167,50 +167,7 @@ var main = {
 };
 
 /**
- * Asynchronous function to get random values on browser using WebWorkers
- *
- * @param {Uint8Array} buf The buffer where the number will be stored
- * @param {boolean} cb Callback executed after the number is computed
- *
- */
-const getRandomValuesWorker = (function () {  // browser
-        let currId = 0;
-        const workerCallbacks = {};
-        const worker = buildWorker(() => {
-            onmessage = function (ev) {
-                const buf = self.crypto.getRandomValues(ev.data.buf);
-                self.postMessage({ buf, id: ev.data.id });
-            };
-        });
-
-        return appendCallback;
-
-        //////////
-
-        function appendCallback(buf, cb) {
-            workerCallbacks[currId] = cb;
-            worker.postMessage({ buf, id: currId });
-            currId++;
-        }
-
-        function buildWorker(workerCode) {
-            const workerBlob = new window.Blob(['(' + workerCode.toString() + ')()'], { type: 'text/javascript' });
-            const worker = new Worker(window.URL.createObjectURL(workerBlob));
-            worker.onmessage = function (ev) {
-                const { id, buf } = ev.data;
-                if (workerCallbacks[id]) {
-                    workerCallbacks[id](false, buf);
-                    delete workerCallbacks[id];
-                }
-            };
-
-            return worker;
-        }
-    })();
-
-
-/**
- * Secure random bytes for both node and browsers
+ * Secure random bytes for both node and browsers. Browser implementation uses WebWorkers in order to not lock the main process
  * 
  * @param {number} byteLength The desired number of random bytes
  * @param {boolean} forceLength If we want to force the output to have a bit length of 8*byteLength. It basically forces the msb to be 1
@@ -310,12 +267,12 @@ const isProbablyPrime = async function (w, iterations = 41) {
 
     loop: do {
         let b = await randBetween(w - BigInt(1), 2);
-        let z = main.modPow(b, m, w);
+        let z = bigintModArithLatest_node.modPow(b, m, w);
         if (z === BigInt(1) || z === w - BigInt(1))
             continue;
 
         for (let j = 1; j < a; j++) {
-            z = main.modPow(z, BigInt(2), w);
+            z = bigintModArithLatest_node.modPow(z, BigInt(2), w);
             if (z === w - BigInt(1))
                 continue loop;
             if (z === BigInt(1))
@@ -344,6 +301,43 @@ const prime = async function (bitLength, iterations = 41) {
 };
 
 
+
+const getRandomValuesWorker = (function () {  // browser
+        let currId = 0;
+        const workerCallbacks = {};
+        const worker = buildWorker(() => {
+            onmessage = function (ev) {
+                const buf = self.crypto.getRandomValues(ev.data.buf);
+                self.postMessage({ buf, id: ev.data.id });
+            };
+        });
+
+        return appendCallback;
+
+        //////////
+
+        function appendCallback(buf, cb) {
+            workerCallbacks[currId] = cb;
+            worker.postMessage({ buf, id: currId });
+            currId++;
+        }
+
+        function buildWorker(workerCode) {
+            const workerBlob = new window.Blob(['(' + workerCode.toString() + ')()'], { type: 'text/javascript' });
+            const worker = new Worker(window.URL.createObjectURL(workerBlob));
+            worker.onmessage = function (ev) {
+                const { id, buf } = ev.data;
+                if (workerCallbacks[id]) {
+                    workerCallbacks[id](false, buf);
+                    delete workerCallbacks[id];
+                }
+            };
+
+            return worker;
+        }
+    })();
+
+
 function fromBuffer(buf) {
     let ret = BigInt(0);
     for (let i of buf.values()) {
@@ -361,16 +355,16 @@ function bitLength(a) {
     return bits;
 }
 
-var main$1 = {
+var main = {
     isProbablyPrime: isProbablyPrime,
     prime: prime,
     randBetween: randBetween,
     randBytes: randBytes
 };
-var main_1 = main$1.isProbablyPrime;
-var main_2 = main$1.prime;
-var main_3 = main$1.randBetween;
-var main_4 = main$1.randBytes;
+var main_1 = main.isProbablyPrime;
+var main_2 = main.prime;
+var main_3 = main.randBetween;
+var main_4 = main.randBytes;
 
-export default main$1;
+export default main;
 export { main_1 as isProbablyPrime, main_2 as prime, main_3 as randBetween, main_4 as randBytes };

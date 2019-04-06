@@ -2,9 +2,8 @@
 
 const modArith = require('bigint-mod-arith');
 
-
 /**
- * Secure random bytes for both node and browsers
+ * Secure random bytes for both node and browsers. Browser implementation uses WebWorkers in order to not lock the main process
  * 
  * @param {number} byteLength The desired number of random bytes
  * @param {boolean} forceLength If we want to force the output to have a bit length of 8*byteLength. It basically forces the msb to be 1
