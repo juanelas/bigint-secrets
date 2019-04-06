@@ -15,8 +15,8 @@
     "url": "https://github.com/juanelas"
   },
   "repository": "github:juanelas/bigint-secrets",
-  "main": "./build/bigint-secrets-latest.node.js",
-  "browser": "./build/bigint-secrets-latest.browser.mod.js",
+  "main": "./dist/bigint-secrets-latest.node.js",
+  "browser": "./dist/bigint-secrets-latest.browser.mod.js",
   "directories": {
     "build": "./build",
     "dist": "./dist",

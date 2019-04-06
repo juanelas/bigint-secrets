@@ -8,7 +8,7 @@ const bitLengths = [
     512,
     1024,
     2048,
-    4096
+    3072
 ];
 
 describe('Testing generation of prime numbers', function () {
