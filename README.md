@@ -51,7 +51,7 @@ const rnd = secrets.randBetween(2**256);
 <dd><p>Returns a cryptographically secure random integer between [min,max]</p>
 </dd>
 <dt><a href="#isProbablyPrime">isProbablyPrime(w, iterations)</a> ⇒ <code>Promise</code></dt>
-<dd><p>Miller-Rabin Probabilistic Primality Test. FIPS 186-4 C.3.1</p>
+<dd><p>The test first tries if any of the first 250 small primes are a factor of the input number and then passes several iterations of Miller-Rabin Probabilistic Primality Test (FIPS 186-4 C.3.1)</p>
 </dd>
 <dt><a href="#prime">prime(bitLength, iterations)</a> ⇒ <code>Promise</code></dt>
 <dd><p>A probably-prime (Miller-Rabin), cryptographically-secure, random-number generator</p>
@@ -87,7 +87,7 @@ Returns a cryptographically secure random integer between [min,max]
 <a name="isProbablyPrime"></a>
 
 ## isProbablyPrime(w, iterations) ⇒ <code>Promise</code>
-Miller-Rabin Probabilistic Primality Test. FIPS 186-4 C.3.1
+The test first tries if any of the first 250 small primes are a factor of the input number and then passes several iterations of Miller-Rabin Probabilistic Primality Test (FIPS 186-4 C.3.1)
 
 **Kind**: global function  
 **Returns**: <code>Promise</code> - A promise that resolve to a boolean that is either true (a probably prime number) or false (definitely composite)  
@@ -95,7 +95,7 @@ Miller-Rabin Probabilistic Primality Test. FIPS 186-4 C.3.1
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
 | w | <code>bigint</code> |  | An integer to be tested for primality |
-| iterations | <code>number</code> | <code>41</code> | The number of iterations for the primality test. The value shall be consistent with Table C.1, C.2 or C.3 |
+| iterations | <code>number</code> | <code>16</code> | The number of iterations for the primality test. The value shall be consistent with Table C.1, C.2 or C.3 |
 
 <a name="prime"></a>
 
@@ -108,7 +108,7 @@ A probably-prime (Miller-Rabin), cryptographically-secure, random-number generat
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
 | bitLength | <code>number</code> |  | The required bit length for the generated prime |
-| iterations | <code>number</code> | <code>41</code> | The number of iterations for the Miller-Rabin Probabilistic Primality Test |
+| iterations | <code>number</code> | <code>16</code> | The number of iterations for the Miller-Rabin Probabilistic Primality Test |
 
 
 * * *
