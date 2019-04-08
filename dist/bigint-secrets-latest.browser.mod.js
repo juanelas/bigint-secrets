@@ -194,8 +194,8 @@ const randBytes = async function (byteLength, forceLength = false) {
 
 /**
  * Returns a cryptographically secure random integer between [min,max]
- * @param {bigint} max Returned value will be < max
- * @param {bigint} min Returned value will be > min
+ * @param {bigint} max Returned value will be <= max
+ * @param {bigint} min Returned value will be >= min
  * 
  * @returns {Promise} A promise that resolves to a cryptographically secure random bigint between [min,max]
  */
@@ -493,9 +493,12 @@ const isProbablyPrime = async function (w, iterations = 16) {
         1583,
         1597,
     ];
-    for (let i = 0; i < firstPrimes.length; i++) {
-        if (w % BigInt(firstPrimes[i]) === BigInt(0))
+    for (let i = 0; i < firstPrimes.length && (BigInt(firstPrimes[i]) <= w); i++) {
+        const p = BigInt(firstPrimes[i]);
+        if (w === p)
             return true;
+        else if (w % p === BigInt(0))
+            return false;
     }
 
     /*
