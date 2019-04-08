@@ -34,8 +34,8 @@ const randBytes = async function (byteLength, forceLength = false) {
 
 /**
  * Returns a cryptographically secure random integer between [min,max]
- * @param {bigint} max Returned value will be < max
- * @param {bigint} min Returned value will be > min
+ * @param {bigint} max Returned value will be <= max
+ * @param {bigint} min Returned value will be >= min
  * 
  * @returns {Promise} A promise that resolves to a cryptographically secure random bigint between [min,max]
  */
