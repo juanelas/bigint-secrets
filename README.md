@@ -18,7 +18,7 @@ bigint-secrets can be imported to your project with `npm`:
 npm install bigint-secrets
 ```
 
-For web brosers, you can also [download the bundle from GitHub](https://raw.githubusercontent.com/juanelas/bigint-secrets/master/dist/bigint-secrets-latest.browser.mod.min.js) or just hotlink to it:
+For web browsers, you can also [download the bundle from GitHub](https://raw.githubusercontent.com/juanelas/bigint-secrets/master/dist/bigint-secrets-latest.browser.mod.min.js) or just hotlink to it:
 ```html
 <script type="module" src="https://raw.githubusercontent.com/juanelas/bigint-secrets/master/dist/bigint-secrets-latest.browser.mod.min.js"></script>
 ```
