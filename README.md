@@ -1,6 +1,6 @@
 # bigint-secrets 
 
-Secure random numbers and probable prime (Miller-Rabin primality test) generation/testing using native JS (stage 3) implementation of BigInt. It can be used with Node.js (starting in version 10.4.0) and [Web Browsers supporting BigInt](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/BigInt#Browser_compatibility).
+Secure random numbers and probable prime (Miller-Rabin primality test) generation/testing using native JS (stage 3) implementation of BigInt. It can be used with Node.js (>=10.4.0) and [Web Browsers supporting BigInt](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/BigInt#Browser_compatibility).
 
 _The operations supported on BigInts are not constant time. BigInt can be therefore **[unsuitable for use in cryptography](https://www.chosenplaintext.ca/articles/beginners-guide-constant-time-cryptography.html)**_
 
@@ -81,8 +81,8 @@ Returns a cryptographically secure random integer between [min,max]
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| max | <code>bigint</code> |  | Returned value will be < max |
-| min | <code>bigint</code> | <code>1</code> | Returned value will be > min |
+| max | <code>bigint</code> |  | Returned value will be <= max |
+| min | <code>bigint</code> | <code>1</code> | Returned value will be >= min |
 
 <a name="isProbablyPrime"></a>
 
