@@ -1,3 +1,5 @@
+'use strict';
+
 const rollup = require('rollup');
 const replace = require('rollup-plugin-replace');
 const resolve = require('rollup-plugin-node-resolve');
@@ -16,9 +18,11 @@ const buildOptions = [
                 replace({
                     'process.browser': true
                 }),
-                resolve(),
+                resolve({
+                    browser: true
+                }),
                 commonjs()
-            ],
+            ]
         },
         output: {
             file: path.join(__dirname, '..', 'dist', `${pkgJson.name}-${pkgJson.version}.browser.mod.js`),
@@ -57,7 +61,7 @@ const buildOptions = [
             file: path.join(__dirname, '..', 'dist', `${pkgJson.name}-${pkgJson.version}.node.js`),
             format: 'cjs'
         }
-    },
+    }
 ];
 
 for (const options of buildOptions) {

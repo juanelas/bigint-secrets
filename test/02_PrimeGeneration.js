@@ -1,7 +1,9 @@
 'use strict';
 
-const expect = require('chai').expect;
-const primes = require('../dist/bigint-secrets-latest.node');
+// For the browser test builder to work you MUST import them module in a variable that
+// is the camelised version of the package name.
+const bigintSecrets = require('../dist/bigint-secrets-latest.node');
+const chai = require('chai');
 
 const bitLengths = [
     256,
@@ -15,14 +17,14 @@ describe('Testing generation of prime numbers', function () {
     for (const bitLength of bitLengths) {
         describe(`Executing prime(${bitLength})`, function () {
             it(`should return a random ${bitLength}-bits probable prime`, async function () {
-                let prime = await primes.prime(bitLength);
-                const ret = await primes.isProbablyPrime(prime);
-                expect(ret).to.equal(true);
+                let prime = await bigintSecrets.prime(bitLength);
+                const ret = await bigintSecrets.isProbablyPrime(prime);
+                chai.expect(ret).to.equal(true);
                 let bits = 1;
                 do {
                     bits++;
                 } while ((prime >>= BigInt(1)) > BigInt(1));
-                expect(bits).to.equal(bitLength);
+                chai.expect(bits).to.equal(bitLength);
             });
         });
     }

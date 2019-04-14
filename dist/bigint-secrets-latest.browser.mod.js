@@ -158,7 +158,7 @@ const modPow = function (a, b, n) {
     return result;
 };
 
-var bigintModArithLatest_node = {
+var main = {
     abs: abs,
     gcd: gcd,
     lcm: lcm,
@@ -530,12 +530,12 @@ const isProbablyPrime = async function (w, iterations = 16) {
 
     loop: do {
         let b = await randBetween(w - BigInt(1), 2);
-        let z = bigintModArithLatest_node.modPow(b, m, w);
+        let z = main.modPow(b, m, w);
         if (z === BigInt(1) || z === w - BigInt(1))
             continue;
 
         for (let j = 1; j < a; j++) {
-            z = bigintModArithLatest_node.modPow(z, BigInt(2), w);
+            z = main.modPow(z, BigInt(2), w);
             if (z === w - BigInt(1))
                 continue loop;
             if (z === BigInt(1))
@@ -618,16 +618,16 @@ function bitLength(a) {
     return bits;
 }
 
-var main = {
+var main$1 = {
     isProbablyPrime: isProbablyPrime,
     prime: prime,
     randBetween: randBetween,
     randBytes: randBytes
 };
-var main_1 = main.isProbablyPrime;
-var main_2 = main.prime;
-var main_3 = main.randBetween;
-var main_4 = main.randBytes;
+var main_1 = main$1.isProbablyPrime;
+var main_2 = main$1.prime;
+var main_3 = main$1.randBetween;
+var main_4 = main$1.randBytes;
 
-export default main;
+export default main$1;
 export { main_1 as isProbablyPrime, main_2 as prime, main_3 as randBetween, main_4 as randBytes };
