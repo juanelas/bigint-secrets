@@ -29,28 +29,28 @@ const secrets = require('bigingt-secrets');
 // Generation of a probable prime of 2048 bits
 const prime = await secrets.prime(2048);
 
-// Testing if a prime is a probable prime (Miller-Ravin)
+// Testing if a prime is a probable prime (Miller-Rabin)
 if ( await secrets.isProbablyPrime(prime) )
     return true;
 
 // Get a cryptographically secure random number between 1 and 2**256 bits.
-const rnd = secrets.randBetween(BigInt(2**256));
+const rnd = secrets.randBetween(BigInt(2)**256);
 ```
 
-From a browser:
+From a browser, you can just load the module in a html page as:
 ```html
   <script type="module">
-    import * as bigintSecrets from './dist/bigint-secrets-latest.browser.mod.min.js';
+    import * as bigintSecrets from 'bigint-secrets-latest.browser.mod.min.js';
 
     (async function () {
       // Get a cryptographically secure random number between 1 and 2**256 bits.
-      const rnd = await bigintSecrets.randBetween(BigInt(2 ** 256));
+      const rnd = await bigintSecrets.randBetween(BigInt(2) ** 256);
       alert(rnd);
 
       // Generation of a probable prime of 2018 bits
       const p = await bigintSecrets.prime(2048);
 
-      // Testing if a prime is a probable prime (Miller-Ravin)
+      // Testing if a prime is a probable prime (Miller-Rabin)
       const isPrime = await bigintSecrets.isProbablyPrime(p);
       alert(p.toString() + '\nIs prime?\n' + isPrime);
     })();
