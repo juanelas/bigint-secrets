@@ -20,7 +20,7 @@ npm install bigint-secrets
 
 For web browsers, you can also [download the bundle from GitHub](https://raw.githubusercontent.com/juanelas/bigint-secrets/master/dist/bigint-secrets-latest.browser.mod.min.js).
 
-## Usage examples
+## Usage example
 
 With node js:
 ```javascript
@@ -42,17 +42,18 @@ From a browser:
   <script type="module">
     import * as bigintSecrets from './dist/bigint-secrets-latest.browser.mod.min.js';
 
-    // Generate and test if a prime is a probable prime (Miller-Ravin)
-    bigintSecrets.prime(2048).then((p) => {
-      bigintSecrets.isProbablyPrime(p).then(
-        function (isPrime) {
-          alert(p.toString() + '\nIs prime?\n' + isPrime);
-        });
-    });
-    // Get a cryptographically-secure random number of between 1 and 2**256 bits.
-    bigintSecrets.randBetween(BigInt(2 ** 256)).then((rnd) => {
-      alert(rnd.toString());
-    });
+    (async function () {
+      // Get a cryptographically secure random number between 1 and 2**256 bits.
+      const rnd = await bigintSecrets.randBetween(BigInt(2 ** 256));
+      alert(rnd);
+
+      // Generation of a probable prime of 2018 bits
+      const p = await bigintSecrets.prime(2048);
+
+      // Testing if a prime is a probable prime (Miller-Ravin)
+      const isPrime = await bigintSecrets.isProbablyPrime(p);
+      alert(p.toString() + '\nIs prime?\n' + isPrime);
+    })();
   </script>
 ```
 
