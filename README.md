@@ -18,13 +18,11 @@ bigint-secrets can be imported to your project with `npm`:
 npm install bigint-secrets
 ```
 
-For web browsers, you can also [download the bundle from GitHub](https://raw.githubusercontent.com/juanelas/bigint-secrets/master/dist/bigint-secrets-latest.browser.mod.min.js) or just hotlink to it:
-```html
-<script type="module" src="https://raw.githubusercontent.com/juanelas/bigint-secrets/master/dist/bigint-secrets-latest.browser.mod.min.js"></script>
-```
+For web browsers, you can also [download the bundle from GitHub](https://raw.githubusercontent.com/juanelas/bigint-secrets/master/dist/bigint-secrets-latest.browser.mod.min.js).
 
-## Usage example
+## Usage examples
 
+With node js:
 ```javascript
 const secrets = require('bigingt-secrets');
 
@@ -35,8 +33,27 @@ const prime = await secrets.prime(2048);
 if ( await secrets.isProbablyPrime(prime) )
     return true;
 
-// Get a cryptographically secure random number of between 1 and 2**256 bits.
-const rnd = secrets.randBetween(2**256);
+// Get a cryptographically secure random number between 1 and 2**256 bits.
+const rnd = secrets.randBetween(BigInt(2**256));
+```
+
+From a browser:
+```html
+  <script type="module">
+    import * as bigintSecrets from './dist/bigint-secrets-latest.browser.mod.min.js';
+
+    // Generate and test if a prime is a probable prime (Miller-Ravin)
+    bigintSecrets.prime(2048).then((p) => {
+      bigintSecrets.isProbablyPrime(p).then(
+        function (isPrime) {
+          alert(p.toString() + '\nIs prime?\n' + isPrime);
+        });
+    });
+    // Get a cryptographically-secure random number of between 1 and 2**256 bits.
+    bigintSecrets.randBetween(BigInt(2 ** 256)).then((rnd) => {
+      alert(rnd.toString());
+    });
+  </script>
 ```
 
 # bigint-secrets JS Doc
