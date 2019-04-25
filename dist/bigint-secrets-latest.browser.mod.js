@@ -572,39 +572,39 @@ const prime = async function (bitLength, iterations = 16) {
 
 
 const getRandomValuesWorker = (function () {  // browser
-    let currId = 0;
-    const workerCallbacks = {};
-    const worker = buildWorker(() => {
-        onmessage = function (ev) {
-            const buf = self.crypto.getRandomValues(ev.data.buf);
-            self.postMessage({ buf, id: ev.data.id });
-        };
-    });
+        let currId = 0;
+        const workerCallbacks = {};
+        const worker = buildWorker(() => {
+            onmessage = function (ev) {
+                const buf = self.crypto.getRandomValues(ev.data.buf);
+                self.postMessage({ buf, id: ev.data.id });
+            };
+        });
 
-    return appendCallback;
+        return appendCallback;
 
-    //////////
+        //////////
 
-    function appendCallback(buf, cb) {
-        workerCallbacks[currId] = cb;
-        worker.postMessage({ buf, id: currId });
-        currId++;
-    }
+        function appendCallback(buf, cb) {
+            workerCallbacks[currId] = cb;
+            worker.postMessage({ buf, id: currId });
+            currId++;
+        }
 
-    function buildWorker(workerCode) {
-        const workerBlob = new window.Blob(['(' + workerCode.toString() + ')()'], { type: 'text/javascript' });
-        const worker = new Worker(window.URL.createObjectURL(workerBlob));
-        worker.onmessage = function (ev) {
-            const { id, buf } = ev.data;
-            if (workerCallbacks[id]) {
-                workerCallbacks[id](false, buf);
-                delete workerCallbacks[id];
-            }
-        };
+        function buildWorker(workerCode) {
+            const workerBlob = new window.Blob(['(' + workerCode.toString() + ')()'], { type: 'text/javascript' });
+            const worker = new Worker(window.URL.createObjectURL(workerBlob));
+            worker.onmessage = function (ev) {
+                const { id, buf } = ev.data;
+                if (workerCallbacks[id]) {
+                    workerCallbacks[id](false, buf);
+                    delete workerCallbacks[id];
+                }
+            };
 
-        return worker;
-    }
-})();
+            return worker;
+        }
+    })();
 
 
 function fromBuffer(buf) {
