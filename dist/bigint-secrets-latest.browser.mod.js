@@ -1,3 +1,7 @@
+const _ZERO = BigInt(0);
+const _ONE = BigInt(1);
+const _TWO = BigInt(2);
+
 /**
  * Absolute value. abs(a)==a if a>=0. abs(a)==-a if a<0
  *  
@@ -5,68 +9,10 @@
  * 
  * @returns {bigint} the absolute value of a
  */
-const abs = function (a) {
+function abs(a) {
     a = BigInt(a);
-    return (a >= BigInt(0)) ? a : -a;
-};
-
-/**
- * Greatest-common divisor of two integers based on the iterative binary algorithm.
- * 
- * @param {number|bigint} a 
- * @param {number|bigint} b 
- * 
- * @returns {bigint} The greatest common divisor of a and b
- */
-const gcd = function (a, b) {
-    a = abs(a);
-    b = abs(b);
-    let shift = BigInt(0);
-    while (!((a | b) & BigInt(1))) {
-        a >>= BigInt(1);
-        b >>= BigInt(1);
-        shift++;
-    }
-    while (!(a & BigInt(1))) a >>= BigInt(1);
-    do {
-        while (!(b & BigInt(1))) b >>= BigInt(1);
-        if (a > b) {
-            let x = a;
-            a = b;
-            b = x;
-        }
-        b -= a;
-    } while (b);
-
-    // rescale
-    return a << shift;
-};
-
-/**
- * The least common multiple computed as abs(a*b)/gcd(a,b)
- * @param {number|bigint} a 
- * @param {number|bigint} b 
- * 
- * @returns {bigint} The least common multiple of a and b
- */
-const lcm = function (a, b) {
-    a = BigInt(a);
-    b = BigInt(b);
-    return abs(a * b) / gcd(a, b);
-};
-
-/**
- * Finds the smallest positive element that is congruent to a in modulo n
- * @param {number|bigint} a An integer
- * @param {number|bigint} n The modulo
- * 
- * @returns {bigint} The smallest positive representation of a in modulo n
- */
-const toZn = function (a, n) {
-    n = BigInt(n);
-    a = BigInt(a) % n;
-    return (a < 0) ? a + n : a;
-};
+    return (a >= _ZERO) ? a : -a;
+}
 
 /**
  * @typedef {Object} egcdReturn A triple (g, x, y), such that ax + by = g = gcd(a, b).
@@ -83,15 +29,15 @@ const toZn = function (a, n) {
  * 
  * @returns {egcdReturn}
  */
-const eGcd = function (a, b) {
+function eGcd(a, b) {
     a = BigInt(a);
     b = BigInt(b);
-    let x = BigInt(0);
-    let y = BigInt(1);
-    let u = BigInt(1);
-    let v = BigInt(0);
+    let x = _ZERO;
+    let y = _ONE;
+    let u = _ONE;
+    let v = _ZERO;
 
-    while (a !== BigInt(0)) {
+    while (a !== _ZERO) {
         let q = b / a;
         let r = b % a;
         let m = x - (u * q);
@@ -108,7 +54,52 @@ const eGcd = function (a, b) {
         x: x,
         y: y
     };
-};
+}
+
+/**
+ * Greatest-common divisor of two integers based on the iterative binary algorithm.
+ * 
+ * @param {number|bigint} a 
+ * @param {number|bigint} b 
+ * 
+ * @returns {bigint} The greatest common divisor of a and b
+ */
+function gcd(a, b) {
+    a = abs(a);
+    b = abs(b);
+    let shift = _ZERO;
+    while (!((a | b) & _ONE)) {
+        a >>= _ONE;
+        b >>= _ONE;
+        shift++;
+    }
+    while (!(a & _ONE)) a >>= _ONE;
+    do {
+        while (!(b & _ONE)) b >>= _ONE;
+        if (a > b) {
+            let x = a;
+            a = b;
+            b = x;
+        }
+        b -= a;
+    } while (b);
+
+    // rescale
+    return a << shift;
+}
+
+/**
+ * The least common multiple computed as abs(a*b)/gcd(a,b)
+ * @param {number|bigint} a 
+ * @param {number|bigint} b 
+ * 
+ * @returns {bigint} The least common multiple of a and b
+ */
+function lcm(a, b) {
+    a = BigInt(a);
+    b = BigInt(b);
+    return abs(a * b) / gcd(a, b);
+}
 
 /**
  * Modular inverse.
@@ -118,14 +109,14 @@ const eGcd = function (a, b) {
  * 
  * @returns {bigint} the inverse modulo n
  */
-const modInv = function (a, n) {
+function modInv(a, n) {
     let egcd = eGcd(a, n);
-    if (egcd.b !== BigInt(1)) {
+    if (egcd.b !== _ONE) {
         return null; // modular inverse does not exist
     } else {
         return toZn(egcd.x, n);
     }
-};
+}
 
 /**
  * Modular exponentiation a**b mod n
@@ -135,20 +126,20 @@ const modInv = function (a, n) {
  * 
  * @returns {bigint} a**b mod n
  */
-const modPow = function (a, b, n) {
+function modPow(a, b, n) {
     // See Knuth, volume 2, section 4.6.3.
     n = BigInt(n);
     a = toZn(a, n);
     b = BigInt(b);
-    if (b < BigInt(0)) {
+    if (b < _ZERO) {
         return modInv(modPow(a, abs(b), n), n);
     }
-    let result = BigInt(1);
+    let result = _ONE;
     let x = a;
     while (b > 0) {
-        var leastSignificantBit = b % BigInt(2);
-        b = b / BigInt(2);
-        if (leastSignificantBit == BigInt(1)) {
+        var leastSignificantBit = b % _TWO;
+        b = b / _TWO;
+        if (leastSignificantBit == _ONE) {
             result = result * x;
             result = result % n;
         }
@@ -156,15 +147,30 @@ const modPow = function (a, b, n) {
         x = x % n;
     }
     return result;
-};
+}
 
-var main = {
+/**
+ * Finds the smallest positive element that is congruent to a in modulo n
+ * @param {number|bigint} a An integer
+ * @param {number|bigint} n The modulo
+ * 
+ * @returns {bigint} The smallest positive representation of a in modulo n
+ */
+function toZn(a, n) {
+    n = BigInt(n);
+    a = BigInt(a) % n;
+    return (a < 0) ? a + n : a;
+}
+
+var bigintModArithLatest_browser_mod = /*#__PURE__*/Object.freeze({
     abs: abs,
+    eGcd: eGcd,
     gcd: gcd,
     lcm: lcm,
     modInv: modInv,
-    modPow: modPow
-};
+    modPow: modPow,
+    toZn: toZn
+});
 
 /**
  * Secure random bytes for both node and browsers. Browser implementation uses WebWorkers in order to not lock the main process
@@ -530,12 +536,12 @@ const isProbablyPrime = async function (w, iterations = 16) {
 
     loop: do {
         let b = await randBetween(w - BigInt(1), 2);
-        let z = main.modPow(b, m, w);
+        let z = bigintModArithLatest_browser_mod.modPow(b, m, w);
         if (z === BigInt(1) || z === w - BigInt(1))
             continue;
 
         for (let j = 1; j < a; j++) {
-            z = main.modPow(z, BigInt(2), w);
+            z = bigintModArithLatest_browser_mod.modPow(z, BigInt(2), w);
             if (z === w - BigInt(1))
                 continue loop;
             if (z === BigInt(1))
@@ -566,39 +572,39 @@ const prime = async function (bitLength, iterations = 16) {
 
 
 const getRandomValuesWorker = (function () {  // browser
-        let currId = 0;
-        const workerCallbacks = {};
-        const worker = buildWorker(() => {
-            onmessage = function (ev) {
-                const buf = self.crypto.getRandomValues(ev.data.buf);
-                self.postMessage({ buf, id: ev.data.id });
-            };
-        });
+    let currId = 0;
+    const workerCallbacks = {};
+    const worker = buildWorker(() => {
+        onmessage = function (ev) {
+            const buf = self.crypto.getRandomValues(ev.data.buf);
+            self.postMessage({ buf, id: ev.data.id });
+        };
+    });
 
-        return appendCallback;
+    return appendCallback;
 
-        //////////
+    //////////
 
-        function appendCallback(buf, cb) {
-            workerCallbacks[currId] = cb;
-            worker.postMessage({ buf, id: currId });
-            currId++;
-        }
+    function appendCallback(buf, cb) {
+        workerCallbacks[currId] = cb;
+        worker.postMessage({ buf, id: currId });
+        currId++;
+    }
 
-        function buildWorker(workerCode) {
-            const workerBlob = new window.Blob(['(' + workerCode.toString() + ')()'], { type: 'text/javascript' });
-            const worker = new Worker(window.URL.createObjectURL(workerBlob));
-            worker.onmessage = function (ev) {
-                const { id, buf } = ev.data;
-                if (workerCallbacks[id]) {
-                    workerCallbacks[id](false, buf);
-                    delete workerCallbacks[id];
-                }
-            };
+    function buildWorker(workerCode) {
+        const workerBlob = new window.Blob(['(' + workerCode.toString() + ')()'], { type: 'text/javascript' });
+        const worker = new Worker(window.URL.createObjectURL(workerBlob));
+        worker.onmessage = function (ev) {
+            const { id, buf } = ev.data;
+            if (workerCallbacks[id]) {
+                workerCallbacks[id](false, buf);
+                delete workerCallbacks[id];
+            }
+        };
 
-            return worker;
-        }
-    })();
+        return worker;
+    }
+})();
 
 
 function fromBuffer(buf) {
@@ -618,16 +624,16 @@ function bitLength(a) {
     return bits;
 }
 
-var main$1 = {
+var main = {
     isProbablyPrime: isProbablyPrime,
     prime: prime,
     randBetween: randBetween,
     randBytes: randBytes
 };
-var main_1 = main$1.isProbablyPrime;
-var main_2 = main$1.prime;
-var main_3 = main$1.randBetween;
-var main_4 = main$1.randBytes;
+var main_1 = main.isProbablyPrime;
+var main_2 = main.prime;
+var main_3 = main.randBetween;
+var main_4 = main.randBytes;
 
-export default main$1;
+export default main;
 export { main_1 as isProbablyPrime, main_2 as prime, main_3 as randBetween, main_4 as randBytes };
