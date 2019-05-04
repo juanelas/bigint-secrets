@@ -1,9 +1,8 @@
 # bigint-secrets
 
-Secure random numbers and probable prime (Miller-Rabin primality test) generation/testing using native JS (stage 3)
-implementation of BigInt. It can be used by any [Web Browser or webview supporting
-BigInt](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/BigInt#Browser_compatibility)
-and with Node.js (>=10.4.0).
+**IMPORTANT! This package has been superseded by [bigint-crypto-utils](https://github.com/juanelas/bigint-crypto-utils)**. Please install that package instead.
+
+Secure random numbers and probable prime (Miller-Rabin primality test) generation/testing using native JS (stage 3) implementation of BigInt. It can be used by any [Web Browser or webview supporting BigInt](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/BigInt#Browser_compatibility) and with Node.js (>=10.4.0).
 
 _The operations supported on BigInts are not constant time. BigInt can be therefore **[unsuitable for use in
 cryptography](https://www.chosenplaintext.ca/articles/beginners-guide-constant-time-cryptography.html).** Many platforms
